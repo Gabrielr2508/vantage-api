@@ -16,13 +16,14 @@ mongoose.connect('mongodb://vantage:5kliaozU@ds161426.mlab.com:61426/vantage-dat
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+
+var routes = require('./api/routes/vantageApiRoutes'); //importing route
+routes(app); //register the route
+
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})
   });
   
-var routes = require('./api/routes/vantageApiRoutes'); //importing route
-routes(app); //register the route
-
 
 app.listen(port);
 
