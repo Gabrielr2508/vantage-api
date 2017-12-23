@@ -3,6 +3,8 @@ var express = require('express'),
   port = process.env.PORT || 3000,
   mongoose = require('mongoose'),
   read = require('./api/models/vantageApiModel'), //created model loading here
+  User = require('./api/models/userModel'),
+  jsonwebtonken = require('jsonwebtoken'),
   bodyParser = require('body-parser');
   
 // mongoose instance connection url connection
@@ -14,10 +16,25 @@ mongoose.connect('mongodb://vantage:5kliaozU@ds161426.mlab.com:61426/vantage-dat
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(bodyParser.json());
 
+app.use(function(req, res, next){
+  if(req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT'){
+    jsonwebtonken.verify(req.headers.authorization.split(' ')[1], 'vantageVue', function(err, decode){
+      if(err) req.user = undefined;
+      req.user = decode;
+      next();
+    });
+  }
+  else {
+    req.user = undefined;
+    next();
+  }
+});
 
 var routes = require('./api/routes/vantageApiRoutes'); //importing route
+
 routes(app); //register the route
 
 app.use(function(req, res) {
