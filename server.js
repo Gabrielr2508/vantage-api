@@ -19,6 +19,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.use(function(req, res, next){
   if(req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT'){
     jsonwebtonken.verify(req.headers.authorization.split(' ')[1], 'vantageVue', function(err, decode){
