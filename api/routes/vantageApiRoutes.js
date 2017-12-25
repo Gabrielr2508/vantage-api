@@ -8,6 +8,8 @@ module.exports = function(app) {
     .get(vantageRead.list_all_reads)
     .post(userHandlers.loginRequired, vantageRead.create_a_read);
 
+  app.route('/read/last')
+    .get(vantageRead.getLastRead);
 
   app.route('/read/:readHour')
     .get(vantageRead.get_a_read)

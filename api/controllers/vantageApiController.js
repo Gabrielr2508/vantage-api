@@ -32,6 +32,15 @@ exports.get_a_read = function(req, res) {
   });
 };
 
+exports.getLastRead = function(req, res) {
+  read.findOne(
+    function(err, readData) {
+      if (err)
+        res.send(err);
+      res.json(readData);
+    }
+  ).sort({ field: 'asc', _id: -1 }).limit(1); 
+};
 
 exports.update_a_read = function(req, res) {
   read.findOneAndUpdate({readDate: req.params.readHour}, req.body, {new: true}, function(err, readData) {
