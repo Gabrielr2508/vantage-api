@@ -5,7 +5,7 @@ var express = require('express'),
   read = require('./api/models/vantageApiModel'), //created model loading here
   User = require('./api/models/userModel'),
   jsonwebtonken = require('jsonwebtoken'),
-  var cors = require('cors'),
+  cors = require('cors'),
   bodyParser = require('body-parser');
   
 // mongoose instance connection url connection
