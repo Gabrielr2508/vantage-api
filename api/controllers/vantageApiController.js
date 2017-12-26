@@ -32,6 +32,19 @@ exports.get_a_read = function(req, res) {
   });
 };
 
+exports.get_reads_between_dates = function(req, res) {
+  read.find({
+    $and: [
+      { $or: [{ readDate: null }, { readDate: { $lte: req.params.readHour2 } }] },
+      { $or: [{ readDate: null }, { readDate: { $gte: req.params.readHour1 } }] }
+    ]
+  }, function (err, readData) {
+    if (err)
+      res.send(err);
+    res.json(readData);
+  });
+};
+
 exports.getLastRead = function(req, res) {
   read.findOne(
     function(err, readData) {

@@ -1,15 +1,18 @@
 'use strict';
-module.exports = function(app) {
+module.exports = function (app) {
   var vantageRead = require('../controllers/vantageApiController'),
-      userHandlers = require('../controllers/userController.js');
+    userHandlers = require('../controllers/userController.js');
 
-  
+
   app.route('/read')
     .get(vantageRead.list_all_reads)
     .post(userHandlers.loginRequired, vantageRead.create_a_read);
 
   app.route('/read/last')
     .get(vantageRead.getLastRead);
+
+  app.route('/read/:readHour1/:readHour2')
+    .get(vantageRead.get_reads_between_dates);
 
   app.route('/read/:readHour')
     .get(vantageRead.get_a_read)
