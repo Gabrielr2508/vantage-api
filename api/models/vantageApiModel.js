@@ -1,7 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
+var timeZone = require('mongoose-timezone');
 var Schema = mongoose.Schema;
-
 
 var readSchema = new Schema({
     readDate: {
@@ -39,5 +39,7 @@ var readSchema = new Schema({
         type: Number,
     }
 });
+
+readSchema.plugin(timeZone, { paths: ['readDate'] });
 
 module.exports = mongoose.model('read', readSchema);
