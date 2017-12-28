@@ -5,12 +5,14 @@ var mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     User = mongoose.model('User');
 
-exports.register = function(req, res) {
+exports.register = function (req, res) {
     console.log(req.body);
     var newUser = new User(req.body);
     newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
-    newUser.save(function(err, user) {
+    newUser.save(function (err, user) {
         if (err) {
+            if (err.code === 11000)
+                return res.status(400).send({message: "E-mail already registered."});
             return res.status(400).send({
                 message: err
             });
@@ -21,23 +23,23 @@ exports.register = function(req, res) {
     });
 };
 
-exports.sign_in = function(req, res) {
-    User.findOne({email: req.body.email}, function(err, user) {
-      if (err) throw err;
-      if (!user) {
-        res.status(401).json({ message: 'Authentication failed. User not found.' });
-      } 
-      else if (user) {
-        if (!user.comparePassword(req.body.password)) {
-          res.status(401).json({ message: 'Authentication failed. Wrong password.' });
-        } else {
-          return res.json({token: jwt.sign({ email: user.email, fullName: user.fullName, _id: user._id}, 'vantageVue')});
+exports.sign_in = function (req, res) {
+    User.findOne({ email: req.body.email }, function (err, user) {
+        if (err) throw err;
+        if (!user) {
+            res.status(401).json({ message: 'Authentication failed. User not found.' });
         }
-      }
+        else if (user) {
+            if (!user.comparePassword(req.body.password)) {
+                res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+            } else {
+                return res.json({ token: jwt.sign({ email: user.email, fullName: user.fullName, _id: user._id }, 'vantageVue') });
+            }
+        }
     });
-  };
+};
 
-exports.loginRequired = function(req, res, next) {
+exports.loginRequired = function (req, res, next) {
     if (req.user) {
         next();
     }
